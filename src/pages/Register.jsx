@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user'); // Default role is 'user'
+  const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -21,11 +21,10 @@ const Register = () => {
         role,
       });
 
-      // Save the token to localStorage
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('role', role); // Store the role
+      localStorage.setItem('role', role);
+      localStorage.setItem('name', name); // Store the user's name
 
-      // Redirect based on role
       if (role === 'admin') {
         navigate('/hackathons');
       } else {
@@ -38,7 +37,13 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
+      <div className="bg-white p-8 rounded shadow-md w-96 relative">
+        <Link
+          to="/hackathons"
+          className="absolute top-4 left-4 text-gray-600 hover:text-gray-800"
+        >
+          ← Back to Hackathons
+        </Link>
         <h2 className="text-2xl font-bold mb-6">Register</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -92,9 +97,9 @@ const Register = () => {
         </form>
         <p className="mt-4 text-center">
           Already have an account?{' '}
-          <a href="/login" className="text-blue-500 hover:underline">
+          <Link to="/login" className="text-blue-500 hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

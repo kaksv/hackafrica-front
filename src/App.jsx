@@ -9,6 +9,11 @@ import Login from './pages/Login';
 import CreateHackathon from './pages/CreateHackathon';
 
 function App() {
+  const handleSearch = (query) => {
+    // You can pass this function to the Hackathons component if needed
+    console.log('Search query:', query);
+  };
+
   return (
     <Router>
       <Routes>
@@ -17,7 +22,7 @@ function App() {
         <Route
           path="/*"
           element={
-            <Layout>
+            <Layout onSearch={handleSearch}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/hackathons" element={<Hackathons />} />

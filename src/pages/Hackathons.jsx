@@ -4,13 +4,16 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const Hackathons = () => {
   const [hackathons, setHackathons] = useState([]);
+  const [filteredHackathons, setFilteredHackathons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchHackathons = async () => {
       try {
         const response = await axios.get('https://devpost-back.onrender.com/api/hackathons');
         setHackathons(response.data);
+        setFilteredHackathons(response.data);
       } catch (error) {
         console.error('Error fetching hackathons:', error);
       } finally {
@@ -21,6 +24,17 @@ const Hackathons = () => {
     fetchHackathons();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = hackathons.filter((hackathon) =>
+        hackathon.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredHackathons(filtered);
+    } else {
+      setFilteredHackathons(hackathons);
+    }
+  }, [searchQuery, hackathons]);
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -29,9 +43,8 @@ const Hackathons = () => {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Hackathons</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {hackathons.map((hackathon) => (
+        {filteredHackathons.map((hackathon) => (
           <div key={hackathon._id} className="bg-white shadow rounded-lg overflow-hidden">
-            {/* Display the hackathon image */}
             {hackathon.imageUrl && (
               <img
                 src={hackathon.imageUrl}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,14 +17,11 @@ const Login = () => {
         password,
       });
 
-      // Save the token to localStorage
       localStorage.setItem('token', response.data.token);
-
-      // Decode the token to get the role
       const decodedToken = JSON.parse(atob(response.data.token.split('.')[1]));
-      localStorage.setItem('role', decodedToken.role); // Store the role
+      localStorage.setItem('role', decodedToken.role);
+      localStorage.setItem('name', decodedToken.name); // Store the user's name
 
-      // Redirect to the appropriate page based on role
       if (decodedToken.role === 'admin') {
         navigate('/hackathons');
       } else {
@@ -37,7 +34,13 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
+      <div className="bg-white p-8 rounded shadow-md w-96 relative">
+        <Link
+          to="/hackathons"
+          className="absolute top-4 left-4 text-gray-600 hover:text-gray-800"
+        >
+          ← Back to Hackathons
+        </Link>
         <h2 className="text-2xl font-bold mb-6">Login</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -70,9 +73,9 @@ const Login = () => {
         </form>
         <p className="mt-4 text-center">
           Don't have an account?{' '}
-          <a href="/register" className="text-blue-500 hover:underline">
+          <Link to="/register" className="text-blue-500 hover:underline">
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>
