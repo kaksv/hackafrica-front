@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import SubmitProject from './pages/SubmitProject';
 import Home from './pages/Home';
 import Hackathons from './pages/Hackathons';
 import HackathonDetails from './pages/HackathonDetails'; // New import
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/hackathons" element={<Hackathons />} />
                 <Route path="/hackathons/:id" element={<HackathonDetails />} /> {/* New route */}
+                <Route path="/submit-project/:hackathonId" element={<SubmitProject />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create-hackathon" element={<CreateHackathon />} />

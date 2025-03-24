@@ -2,19 +2,39 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
 
 const Hackathons = () => {
   const [hackathons, setHackathons] = useState([]);
-  const [filteredHackathons, setFilteredHackathons] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [participationStatus, setParticipationStatus] = useState({});
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchHackathons = async () => {
       try {
         const response = await axios.get('https://devpost-back.onrender.com/api/hackathons');
         setHackathons(response.data);
-        setFilteredHackathons(response.data);
+        
+        // Check participation status for each hackathon if logged in
+        if (token) {
+          const status = {};
+          for (const hackathon of response.data) {
+            try {
+              const res = await axios.get(
+                `https://devpost-back.onrender.com/api/hackathons/${hackathon._id}/check-participation`,
+                {
+                  headers: { Authorization: `Bearer ${token}` }
+                }
+              );
+              status[hackathon._id] = res.data.isParticipating;
+            } catch (err) {
+              status[hackathon._id] = false;
+            }
+          }
+          setParticipationStatus(status);
+        }
       } catch (error) {
         console.error('Error fetching hackathons:', error);
       } finally {
@@ -23,18 +43,34 @@ const Hackathons = () => {
     };
 
     fetchHackathons();
-  }, []);
+  }, [token]);
 
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = hackathons.filter((hackathon) =>
-        hackathon.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredHackathons(filtered);
-    } else {
-      setFilteredHackathons(hackathons);
+  const handleParticipate = async (hackathonId) => {
+    if (!token) {
+      navigate('/login');
+      return;
     }
-  }, [searchQuery, hackathons]);
+
+    try {
+      const response = await axios.post(
+        `https://devpost-back.onrender.com/api/hackathons/${hackathonId}/participate`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Update participation status
+      setParticipationStatus(prev => ({
+        ...prev,
+        [hackathonId]: true
+      }));
+      
+      // Redirect to submit project page
+      navigate(`/submit-project/${hackathonId}`);
+    } catch (error) {
+      console.error('Error participating:', error);
+      alert(error.response?.data?.message || 'Error participating in hackathon');
+    }
+  };
 
   if (loading) {
     return <LoadingSpinner />;
@@ -44,12 +80,8 @@ const Hackathons = () => {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Hackathons</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredHackathons.map((hackathon) => (
-          <Link
-            to={`/hackathons/${hackathon._id}`}
-            key={hackathon._id}
-            className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-          >
+        {hackathons.map((hackathon) => (
+          <div key={hackathon._id} className="bg-white shadow rounded-lg overflow-hidden">
             {hackathon.imageUrl && (
               <img
                 src={hackathon.imageUrl}
@@ -60,17 +92,33 @@ const Hackathons = () => {
             <div className="p-4">
               <h2 className="text-xl font-bold mb-2">{hackathon.title}</h2>
               <p className="text-gray-700 mb-2 line-clamp-2">{hackathon.description}</p>
-              <p className="text-sm text-gray-600">
-                <strong>Start Date:</strong> {new Date(hackathon.startDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-600">
-                <strong>End Date:</strong> {new Date(hackathon.endDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-600 line-clamp-1">
-                <strong>Prizes:</strong> {hackathon.prizes}
-              </p>
+              <div className="text-sm text-gray-600 space-y-1 mb-4">
+                <p><strong>Start:</strong> {new Date(hackathon.startDate).toLocaleDateString()}</p>
+                <p><strong>End:</strong> {new Date(hackathon.endDate).toLocaleDateString()}</p>
+              </div>
+              
+              <div className="flex justify-between items-center mt-4">
+                <Link
+                  to={`/hackathons/${hackathon._id}`}
+                  className="text-blue-500 hover:underline"
+                >
+                  View Details
+                </Link>
+                
+                <button
+                  onClick={() => handleParticipate(hackathon._id)}
+                  disabled={participationStatus[hackathon._id]}
+                  className={`px-4 py-2 rounded ${
+                    participationStatus[hackathon._id]
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-green-500 hover:bg-green-600 text-white'
+                  }`}
+                >
+                  {participationStatus[hackathon._id] ? 'Participating' : 'Participate'}
+                </button>
+              </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
