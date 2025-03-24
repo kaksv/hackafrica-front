@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -44,7 +45,11 @@ const Hackathons = () => {
       <h1 className="text-3xl font-bold mb-6">Hackathons</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredHackathons.map((hackathon) => (
-          <div key={hackathon._id} className="bg-white shadow rounded-lg overflow-hidden">
+          <Link
+            to={`/hackathons/${hackathon._id}`}
+            key={hackathon._id}
+            className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+          >
             {hackathon.imageUrl && (
               <img
                 src={hackathon.imageUrl}
@@ -54,18 +59,18 @@ const Hackathons = () => {
             )}
             <div className="p-4">
               <h2 className="text-xl font-bold mb-2">{hackathon.title}</h2>
-              <p className="text-gray-700 mb-2">{hackathon.description}</p>
+              <p className="text-gray-700 mb-2 line-clamp-2">{hackathon.description}</p>
               <p className="text-sm text-gray-600">
                 <strong>Start Date:</strong> {new Date(hackathon.startDate).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-600">
                 <strong>End Date:</strong> {new Date(hackathon.endDate).toLocaleDateString()}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 line-clamp-1">
                 <strong>Prizes:</strong> {hackathon.prizes}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
