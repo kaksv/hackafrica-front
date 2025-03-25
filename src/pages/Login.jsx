@@ -12,21 +12,30 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      const pendingParticipation = localStorage.getItem('pendingParticipation');
       const response = await axios.post('https://devpost-back.onrender.com/api/auth/login', {
         email,
         password,
+    
       });
 
       localStorage.setItem('token', response.data.token);
-      const decodedToken = JSON.parse(atob(response.data.token.split('.')[1]));
-      localStorage.setItem('role', decodedToken.role);
-      localStorage.setItem('name', decodedToken.name); // Store the user's name
+      localStorage.setItem('role', response.data.role);
 
-      if (decodedToken.role === 'admin') {
-        navigate('/hackathons');
-      } else {
-        navigate('/projects');
+      // Store user's name if available
+      const decodedToken = JSON.parse(atob(response.data.token.split('.')[1]));
+      if (decodedToken.name) {
+        localStorage.setItem('name', decodedToken.name);
       }
+      // Handle redirect based on role and pending participation
+      if (pendingParticipation) {
+        navigate(`/submit-project/${pendingParticipation}`);
+        localStorage.removeItem('pendingParticipation');
+      } else {
+        navigate(response.data.role === 'admin' ? '/hackathons' : '/hackathons');
+      }
+      
+
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }

@@ -14,6 +14,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
+      const pendingParticipation = localStorage.getItem('pendingParticipation');
       const response = await axios.post('https://devpost-back.onrender.com/api/auth/register', {
         name,
         email,
@@ -25,11 +26,13 @@ const Register = () => {
       localStorage.setItem('role', role);
       localStorage.setItem('name', name); // Store the user's name
 
-      if (role === 'admin') {
-        navigate('/hackathons');
+      if (pendingParticipation) {
+        navigate(`/submit-project/${pendingParticipation}`);
+        localStorage.removeItem('pendingParticipation');
       } else {
-        navigate('/projects');
+        navigate(role === 'admin' ? '/hackathons' : '/hackathons');
       }
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     }

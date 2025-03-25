@@ -15,6 +15,7 @@ const Hackathons = () => {
     const fetchHackathons = async () => {
       try {
         const response = await axios.get('https://devpost-back.onrender.com/api/hackathons');
+        // const response = await axios.get('http://localhost:5000/api/hackathons');
         setHackathons(response.data);
         
         // Check participation status for each hackathon if logged in
@@ -24,6 +25,7 @@ const Hackathons = () => {
             try {
               const res = await axios.get(
                 `https://devpost-back.onrender.com/api/hackathons/${hackathon._id}/check-participation`,
+                // `http://localhost:5000/api/hackathons/${hackathon._id}/check-participation`,
                 {
                   headers: { Authorization: `Bearer ${token}` }
                 }
@@ -46,29 +48,61 @@ const Hackathons = () => {
   }, [token]);
 
   const handleParticipate = async (hackathonId) => {
+    const token = localStorage.getItem('token');
+
     if (!token) {
+      // Store the hackathon ID in localStorage before redirecting to register
+    localStorage.setItem('pendingParticipation', hackathonId);
       navigate('/login');
       return;
     }
 
     try {
       const response = await axios.post(
+        // `${API_BASE_URL}/hackathons/${hackathonId}/participate`,
         `https://devpost-back.onrender.com/api/hackathons/${hackathonId}/participate`,
+        // `http://localhost:5000/api/hackathons/${hackathonId}/participate`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+           headers: { Authorization: `Bearer ${token}`,
+           'Content-Type': 'application/json'
+           } }
       );
+
+       // Handle success (whether new participation or already participating)
+      if (response.data.success) {
+         // Handle success (whether new participation or already participating)
+        navigate(`/submit-project/${hackathonId}`);
+      } else {
+        console.error('Participation failed:', response.data.message);
+        alert('Failed to participate. Please try again.');
+      }
       
-      // Update participation status
-      setParticipationStatus(prev => ({
-        ...prev,
-        [hackathonId]: true
-      }));
+      // // Update participation status
+      // setParticipationStatus(prev => ({
+      //   ...prev,
+      //   [hackathonId]: true
+      // }));
       
-      // Redirect to submit project page
-      navigate(`/submit-project/${hackathonId}`);
+      // // Redirect to submit project page
+      // navigate(`/submit-project/${hackathonId}`);
     } catch (error) {
       console.error('Error participating:', error);
-      alert(error.response?.data?.message || 'Error participating in hackathon');
+
+      // Handle specific error cases
+      if (error.response) {
+        // Handle specific error cases
+        if (error.response.status === 404) {
+          alert('Hackathon not found');
+        } else if (error.response.status === 401) {
+          alert('Please login to participate');
+          navigate('/login');
+        } else {
+          alert(error.response.data?.message || 'Participation error');
+        }
+      } else {
+        alert('Network error. Please check your connection.');
+      }
     }
   };
 
@@ -126,6 +160,8 @@ const Hackathons = () => {
 };
 
 export default Hackathons;
+
+
 
 // import { useState, useEffect } from 'react';
 // import axios from 'axios';
