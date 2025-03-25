@@ -34,7 +34,7 @@ const Navbar = ({ onSearch }) => {
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <div className="flex items-center">
         <Link to="/" className="text-xl font-bold text-gray-800">
-          Devpost Clone
+          Hack Africa
         </Link>
       </div>
       <form onSubmit={handleSearch} className="flex items-center">

@@ -5,7 +5,7 @@ const Sidebar = () => {
 
   return (
     <div className="bg-white text-gray-800 w-64 min-h-screen p-4 shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Devpost Clone</h2>
+      <h2 className="text-2xl font-bold mb-6">HA</h2>
       <ul>
         <li className="mb-2">
           <Link to="/" className="block p-2 hover:bg-gray-100 rounded">
