@@ -135,6 +135,26 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Hackathons section */}
+      {/* <section className="py-12">
+      <div className="py-8 bg-white">
+  <div className="container mx-auto px-4 grid grid-cols-3 text-center">
+    <div>
+      <div className="text-4xl font-bold text-blue-600">50+</div>
+      <div className="text-gray-600">Hackathons</div>
+    </div>
+    <div>
+      <div className="text-4xl font-bold text-blue-600">1000+</div>
+      <div className="text-gray-600">Participants</div>
+    </div>
+    <div>
+      <div className="text-4xl font-bold text-blue-600">300+</div>
+      <div className="text-gray-600">Projects</div>
+    </div>
+  </div>
+</div>
+      </section> */}
+
       {/* Call to Action */}
       <section className="py-16 bg-blue-600 text-white">
         <div className="container mx-auto px-4 text-center">
@@ -169,6 +189,33 @@ const Home = () => {
           </div>
         </div>
       </section>
+    
+    {/* Testimonials */}
+      {/* <section className="py-12 bg-gray-100">
+  <div className="container mx-auto px-4">
+    <h2 className="text-2xl font-bold mb-8 text-center">What Our Community Says</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {testimonials.map((testimonial, index) => (
+        <div key={index} className="bg-white p-6 rounded-lg shadow">
+          <p className="italic mb-4">"{testimonial.quote}"</p>
+          <div className="flex items-center">
+            <img 
+              src={testimonial.avatar} 
+              alt={testimonial.name}
+              className="w-10 h-10 rounded-full mr-3"
+            />
+            <div>
+              <div className="font-medium">{testimonial.name}</div>
+              <div className="text-sm text-gray-500">{testimonial.role}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> */}
+
+      
     </div>
   );
 };
