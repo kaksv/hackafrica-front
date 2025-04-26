@@ -8,9 +8,9 @@ const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
-    totalHackathons: 3,
-    totalUsers: 20,
-    totalProjects: 2,
+    totalHackathons: 20,
+    totalUsers: 50,
+    totalProjects: 10,
   })
   const role = localStorage.getItem("role")
 
@@ -81,19 +81,23 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl shadow-md p-6 text-center transform transition hover:scale-105">
             <div className="text-4xl font-bold text-blue-600 mb-2">
-            {loading ? <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto animate-pulse"></div> : stats.totalHackathons >= 50 ? `${stats.totalHackathons}+` : stats.totalHackathons}
+            {/* {  stats.totalHackathons >= 50 ? `${stats.totalHackathons}+` : stats.totalHackathons} */}
+            {stats.totalHackathons}
+              
             </div>
             <div className="text-gray-600">Hackathons Hosted</div>
           </div>
           <div className="bg-white rounded-xl shadow-md p-6 text-center transform transition hover:scale-105">
             <div className="text-4xl font-bold text-purple-600 mb-2">
-            {stats.totalUsers >= 1000 ? `${stats.totalUsers}+` : stats.totalUsers}
+            {/* {stats.totalUsers >= 1000 ? `${stats.totalUsers}+` : stats.totalUsers} */}
+            {stats.totalUsers}
               </div>
             <div className="text-gray-600">Registered Users</div>
           </div>
           <div className="bg-white rounded-xl shadow-md p-6 text-center transform transition hover:scale-105">
             <div className="text-4xl font-bold text-green-600 mb-2">
-            {stats.totalProjects >= 300 ? `${stats.totalProjects}+` : stats.totalProjects}
+            {/* {stats.totalProjects >= 300 ? `${stats.totalProjects}+` : stats.totalProjects} */}
+            {stats.totalProjects}
               </div>
             <div className="text-gray-600">Projects Submitted</div>
           </div>

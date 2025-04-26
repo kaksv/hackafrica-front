@@ -25,7 +25,7 @@ function App() {
           element={
             <Layout onSearch={handleSearch}>
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Hackathons />} />
                 <Route path="/hackathons" element={<Hackathons />} />
                 <Route path="/hackathons/:id" element={<HackathonDetails />} /> {/* New route */}
                 <Route path="/submit-project/:hackathonId" element={<SubmitProject />} />
