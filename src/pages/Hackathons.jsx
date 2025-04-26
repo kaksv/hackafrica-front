@@ -14,35 +14,65 @@ const Hackathons = () => {
   const token = localStorage.getItem("token")
 
   useEffect(() => {
+    // const fetchHackathons = async () => {
+    //   try {
+    //     const response = await axios.get("https://devpost-back.onrender.com/api/hackathons")
+    //     setHackathons(response.data)
+
+    //     // Check participation status for each hackathon if logged in
+    //     if (token) {
+    //       const status = {}
+    //       for (const hackathon of response.data) {
+    //         try {
+    //           const res = await axios.get(
+    //             `https://devpost-back.onrender.com/api/hackathons/${hackathon._id}/check-participation`,
+    //             {
+    //               headers: { Authorization: `Bearer ${token}` },
+    //             },
+    //           )
+    //           status[hackathon._id] = res.data.isParticipating
+    //         } catch (err) {
+    //           status[hackathon._id] = false
+    //         }
+    //       }
+    //       setParticipationStatus(status)
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching hackathons:", error)
+    //   } finally {
+    //     setLoading(false)
+    //   }
+    // }
     const fetchHackathons = async () => {
       try {
-        const response = await axios.get("https://devpost-back.onrender.com/api/hackathons")
-        setHackathons(response.data)
-
-        // Check participation status for each hackathon if logged in
-        if (token) {
-          const status = {}
-          for (const hackathon of response.data) {
-            try {
-              const res = await axios.get(
-                `https://devpost-back.onrender.com/api/hackathons/${hackathon._id}/check-participation`,
-                {
-                  headers: { Authorization: `Bearer ${token}` },
-                },
-              )
-              status[hackathon._id] = res.data.isParticipating
-            } catch (err) {
-              status[hackathon._id] = false
-            }
-          }
-          setParticipationStatus(status)
-        }
+        const response = await axios.get("https://devpost-back.onrender.com/api/hackathons");
+        
+        // Get current date for comparison
+        const currentDate = new Date();
+    
+        // Sort hackathons
+        const sortedHackathons = response.data.sort((a, b) => {
+          // Check if hackathons are active
+          const aIsActive = new Date(a.endDate) > currentDate;
+          const bIsActive = new Date(b.endDate) > currentDate;
+    
+          // Prioritize active hackathons
+          if (aIsActive ==!bIsActive) return aIsActive ? -1: 1;
+          // if (!aIsActive && bIsActive) return 1;
+    
+          // For hackathons with same status, sort by creation date (newest first)
+          return new Date(b.startDate) - new Date(a.startDate);
+        });
+    
+        setHackathons(sortedHackathons);
+    
+        // Rest of your participation check code...
       } catch (error) {
-        console.error("Error fetching hackathons:", error)
+        console.error("Error fetching hackathons:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     fetchHackathons()
   }, [token])
@@ -132,7 +162,11 @@ const Hackathons = () => {
           {hackathons.map((hackathon) => (
             <div
               key={hackathon._id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1"
+              className={`bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1 ${
+      new Date(hackathon.endDate) > new Date() 
+        ? "opacity-100" 
+        : "opacity-75"
+    }`}
             >
               <div className="h-48 overflow-hidden relative">
                 <img
