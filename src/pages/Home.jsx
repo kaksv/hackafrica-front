@@ -23,7 +23,13 @@ const Home = () => {
           // axios.get("https://devpost-back.onrender.com/api/stats"), //New API endpoint for stats
         ])
 
-        setActiveHackathons(hackathonsRes.data.slice(0, 3))
+         // Sort hackathons by createdAt date (newest first)
+      const sortedHackathons = [...hackathonsRes.data].sort(
+        (a, b) => new Date(b.startDate) - new Date(a.startDate)
+      )
+        // setActiveHackathons(hackathonsRes.data.slice(0, 3))
+        setActiveHackathons(sortedHackathons.slice(0, 3))
+        // setFeaturedProjects(projectsRes.data.slice(0, 3))
         setFeaturedProjects(projectsRes.data.slice(0, 3))
         // setStats(statsRes.data);
       } catch (error) {
