@@ -9,6 +9,7 @@ import Profile from "./pages/Profile"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import CreateHackathon from "./pages/CreateHackathon"
+import ProjectDetails from "./pages/ProjectDetails"
 
 function App() {
   const handleSearch = (query) => {
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/hackathons/:id" element={<HackathonDetails />} /> {/* New route */}
                 <Route path="/submit-project/:hackathonId" element={<SubmitProject />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:id" element={<ProjectDetails />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create-hackathon" element={<CreateHackathon />} />
               </Routes>

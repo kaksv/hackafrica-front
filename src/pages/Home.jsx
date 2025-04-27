@@ -19,14 +19,22 @@ const Home = () => {
       try {
         const [hackathonsRes, projectsRes] = await Promise.all([
           axios.get("https://devpost-back.onrender.com/api/hackathons?status=active"),
-          axios.get("https://devpost-back.onrender.com/api/projects?featured=true"),
+          // axios.get("https://devpost-back.onrender.com/api/projects?featured=true"),
+          // We need to think about implementing the logic for a project to be featured.
+          axios.get("https://devpost-back.onrender.com/api/projects"),
           // axios.get("https://devpost-back.onrender.com/api/stats"), //New API endpoint for stats
         ])
+
+        console.log("Featured projects response:", projectsRes.data);
 
          // Sort hackathons by createdAt date (newest first)
       const sortedHackathons = [...hackathonsRes.data].sort(
         (a, b) => new Date(b.startDate) - new Date(a.startDate)
       )
+      // Sort projects by createdAt date (newest first)
+      // const sortedProjects = [...projectsRes.data].sort(
+      //   (a, b) => new Date(b.startDate) - new Date(a.startDate)
+      // )
         // setActiveHackathons(hackathonsRes.data.slice(0, 3))
         setActiveHackathons(sortedHackathons.slice(0, 3))
         // setFeaturedProjects(projectsRes.data.slice(0, 3))
