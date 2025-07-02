@@ -232,7 +232,7 @@ const Hackathons = () => {
                     className={`px-4 py-2 rounded-lg transition-colors border cursor-pointer text-black ${
                       participationStatus[hackathon._id]
                         ? "bg-gray-300 text-green-800 border border-green-300 cursor-not-allowed"
-                        : "bg-blue-600 hover:bg-blue-700 text-white border-blue-600 hover:border-blue-700"
+                        : "bg-blue-600 hover:bg-blue-700 text-black border-blue-600 hover:border-blue-700"
                     }`}
                   >
                     {participationStatus[hackathon._id] ? (
