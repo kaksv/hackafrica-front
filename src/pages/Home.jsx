@@ -25,6 +25,7 @@ const Home = () => {
           // axios.get("https://devpost-back.onrender.com/api/stats"), //New API endpoint for stats
         ])
 
+        console.log("Hackathons response:", hackathonsRes.data);
         console.log("Featured projects response:", projectsRes.data);
 
          // Sort hackathons by createdAt date (newest first)
